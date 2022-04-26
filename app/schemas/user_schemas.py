@@ -6,6 +6,7 @@ from pydantic import EmailStr
 
 class UserBase(BaseModel):
     email: EmailStr
+    username: str
 
 
 class UserSchema(UserBase):

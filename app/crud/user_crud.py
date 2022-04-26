@@ -35,3 +35,8 @@ def add_user(db: Session, user_data: UserCreateSchema) -> UserSchema:
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def delete_user(db: Session, email) -> UserSchema:
+    db.delete(email=email)
+    db.commit()

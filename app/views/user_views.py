@@ -44,7 +44,7 @@ async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -54,10 +54,9 @@ async def get_current_user(user_data: UserModel = Depends(get_current_user)):
     return user_data
 
 
-@user_router.post("/sign/up", response_model=UserSchema)
+@user_router.post("/register", response_model=UserSchema)
 async def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
     user = user_crud.get_user_by_email(db, user_data.email)
-
     if user:
         raise HTTPException(
             status_code=409,
