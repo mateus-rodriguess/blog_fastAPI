@@ -2,12 +2,12 @@ from pydantic import BaseModel
 from pydantic import EmailStr
 
 class UserBase(BaseModel):
-    email: EmailStr
+    email: EmailStr 
    
     
 
 class UserSchema(UserBase):
-    first_name: str
+    first_name: str 
     last_name: str
    
     class Config:

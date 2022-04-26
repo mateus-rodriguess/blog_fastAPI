@@ -8,8 +8,8 @@ from app.database import get_db
 from app.models.user_models import UserModel
 from app.schemas.user_schemas import UserCreateSchema, UserSchema
 from app.services.security import (ACCESS_TOKEN_EXPIRE_MINUTES,
-                                   authenticate_user, create_access_token,
-                                   get_current_user)
+                                   authenticate_user, create_access_token, get_current_user,
+                                   get_current_active_user)
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -20,6 +20,9 @@ user_router = APIRouter()
 
 @user_router.get("", response_model=List[UserSchema])
 async def users(db: Session = Depends(get_db)):
+    """
+    Get users
+    """
     users = user_crud.get_all_users(db)
     return list(users)
 
@@ -55,12 +58,12 @@ async def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
     if user:
         raise HTTPException(
             status_code=409,
-            detail="email exist",
+            detail="username exist",
         )
     new_user = user_crud.add_user(db, user_data)
     return new_user
 
 
-@user_router.get("/me", response_model=UserSchema)
-async def get_current_user(user_data: UserModel = Depends(get_current_user)):
-    return user_data
+# @user_router.get("/me", response_model=UserSchema)
+# async def read_users_me(current_user: UserSchema = Depends(get_current_active_user)):
+#     return current_user

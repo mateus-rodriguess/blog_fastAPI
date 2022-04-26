@@ -4,10 +4,10 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     app_name: str = "Blog API"
-    SECRET_KEY: str = "default"
-    ALGORITHM: str = "default"
+    SECRET_KEY: str = "hfaushbfub4u23b4u32b4b324j3" # default
+    ALGORITHM: str = "HS256" # default
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 80
-    SQLALCHEMY_DATABASE_URL: str = "default"
+    SQLALCHEMY_DATABASE_URL: str = "postgresql://admin:admin@db/app" # default
 
     class Config:
         case_sensitive = True

@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from app.models import user_models
+from app.models import user_models, post_models
 from app.views.user_views import user_router
 
 from .database import SessionLocal, engine, Base
@@ -16,7 +16,7 @@ load_dotenv()
 
 # create tables
 user_models.Base.metadata.create_all(bind=engine)
-
+post_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(openapi_url="/openapi.json")
 
