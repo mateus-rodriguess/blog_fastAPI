@@ -6,10 +6,10 @@ from typing import List
 from app.crud import user_crud
 from app.database import get_db
 from app.models.user_models import UserModel
-from app.schemas.token_schemas import TokenDataSchema
 from app.schemas.user_schemas import UserCreateSchema, UserSchema
-from app.services.security import ACCESS_TOKEN_EXPIRE_MINUTES, get_current_user, authenticate_user, create_access_token
-
+from app.services.security import (ACCESS_TOKEN_EXPIRE_MINUTES,
+                                   authenticate_user, create_access_token,
+                                   get_current_user)
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -24,16 +24,16 @@ async def users(db: Session = Depends(get_db)):
     return list(users)
 
 
-@user_router.get("/{email:str}", response_model=UserSchema)
-async def get_user(email: str, db: Session = Depends(get_db)) -> UserSchema:
-    user = user_crud.get_user_by_email(db, email)
+@user_router.get("/{username:str}", response_model=UserSchema)
+async def get_user(username: str, db: Session = Depends(get_db)) -> UserSchema:
+    user = user_crud.get_user_by_username(db, username)
     if user:
         return user
     else:
         return {'message': 'user not found'}, 404
 
 
-@user_router.post("/login", response_model=TokenDataSchema)
+@user_router.post("/login")
 async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -44,19 +44,14 @@ async def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@user_router.get("me", response_model=UserSchema)
-async def get_current_user(user_data: UserModel = Depends(get_current_user)):
-    return user_data
-
-
 @user_router.post("/register", response_model=UserSchema)
 async def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
-    user = user_crud.get_user_by_email(db, user_data.email)
+    user = user_crud.get_user_by_username(db, user_data.username)
     if user:
         raise HTTPException(
             status_code=409,
@@ -64,3 +59,8 @@ async def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
         )
     new_user = user_crud.add_user(db, user_data)
     return new_user
+
+
+@user_router.get("/me", response_model=UserSchema)
+async def get_current_user(user_data: UserModel = Depends(get_current_user)):
+    return user_data

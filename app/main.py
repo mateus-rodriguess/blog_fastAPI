@@ -10,10 +10,13 @@ from app.views.user_views import user_router
 from .database import SessionLocal, engine, Base
 from app.models.user_models import UserModel
 load_dotenv()
+
+#Base.metadata.drop_all(bind=engine, tables=[UserModel.__table__])
+
+
 # create tables
 user_models.Base.metadata.create_all(bind=engine)
 
-#Base.metadata.drop_all(bind=engine, tables=[UserModel.__table__])
 
 app = FastAPI(openapi_url="/openapi.json")
 

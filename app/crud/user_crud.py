@@ -19,13 +19,14 @@ def get_all_users(db: Session) -> List[UserModel]:
     return db.query(UserModel).filter().all()
 
 
-def get_user_by_email(db: Session, email: str) -> Optional[UserModel]:
-    return db.query(UserModel).filter(UserModel.email == email).first()
+def get_user_by_username(db: Session, username: str) -> Optional[UserModel]:
+    return db.query(UserModel).filter(UserModel.username == username).first()
 
 
 def add_user(db: Session, user_data: UserCreateSchema) -> UserSchema:
     hashed_password = get_password_hash(user_data.password)
     db_user = UserModel(
+        username=user_data.username,
         email=user_data.email,
         first_name=user_data.first_name,
         last_name=user_data.last_name,

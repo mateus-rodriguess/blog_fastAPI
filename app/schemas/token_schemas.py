@@ -9,4 +9,4 @@ class Token(BaseModel):
 
 
 class TokenDataSchema(BaseModel):
-    email: Optional[str] = None
+    username: Optional[str] = None
