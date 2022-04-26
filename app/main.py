@@ -7,11 +7,13 @@ from starlette.responses import RedirectResponse
 from app.models import user_models
 from app.views.user_views import user_router
 
-from .database import SessionLocal, engine
-
+from .database import SessionLocal, engine, Base
+from app.models.user_models import UserModel
 load_dotenv()
 # create tables
 user_models.Base.metadata.create_all(bind=engine)
+
+#Base.metadata.drop_all(bind=engine, tables=[UserModel.__table__])
 
 app = FastAPI(openapi_url="/openapi.json")
 
@@ -25,6 +27,7 @@ app.add_middleware(
 
 app.router.prefix = "/api/v1"
 
+# routes
 app.include_router(user_router, prefix="/users")
 
 
