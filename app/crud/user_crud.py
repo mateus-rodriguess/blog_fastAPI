@@ -1,17 +1,8 @@
-import email
-import os
 from typing import Optional, List
 
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
-from fastapi.params import Depends
-from starlette import status
-
-from app.database import get_db
 from app.models.user_models import UserModel
 from app.schemas.user_schemas import UserCreateSchema, UserSchema
-from app.models.user_models import UserModel
 from app.services.security import get_password_hash
 
 

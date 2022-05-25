@@ -1,6 +1,4 @@
 from datetime import timedelta
-from hashlib import new
-from os import access
 from typing import List
 
 from app.crud import user_crud
